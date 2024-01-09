@@ -56,9 +56,31 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 - * Download Debug View from this direct link: https://download.sysinternals.com/files/DebugView.zip
   * Or go here: https://learn.microsoft.com/en-us/sysinternals/downloads/debugview
 
+
+# Visual Studio 2022 Project Setup 
+  - 1 Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF).
+    Right click on the project
+    
+  ![5](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/5d1dd955-ca81-4faf-be77-d41adca4c1ec)
+  
+  - 2 Activate "Use Local Time" and Enable Active(Release)
+  
+  ![6](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/44acad7f-24b8-4fdd-b756-b9631a7b4f61)
+
+  - 3 Navigate to "Linker" -> "Command Line" and write
+
+    "/INTEGRITYCHECK"
+
+  - 4 Add A Class
+
+    Tip: Name this the same name as the project
+    
+    Right Click on Properties -> Hover on Add -> Click On Class
+    ![8](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/ec977ceb-d804-4473-9b13-9b9bbc453c77)
+
+  
 # Creating And Running The Driver ( Using Debug View ) 
 
-- 1 Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF).
 - 2 Add a new header file named "messages.h" ( In the Header Files Folder ).
 - 3 Define a function called debug_message that takes a string and some extra parameters.
   ![1](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/b111f975-b64c-4655-86a2-99a4e0c8a54c)
@@ -85,21 +107,25 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 
       bcdedit /set testsigning on
 
-- 11 Load the driver using the sc command.
-    Without the quotation marks and with the name of your kernel driver 
-
-      sc start "kernel driver name"
+- 11 Start DebugView in ADMIN mode
   
 - 12 Enable Capture Kernel In Debug View
   ![4](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/e00cb8ac-d070-43bd-b964-d3837a1b289e)
 
+- 13.1 Load the driver using the sc command.
+    Without the quotation marks and with the name of your kernel driver 
 
-- 13 Stop the driver using the sc command.
+      sc start "kernel driver name"
+
+- 13.2 If you get an error when trying to start
+    If you get an error when trying to start the service, try to enter this in to ADMIN cmd and restart. 
+  
+      bcdedit /set nointegritychecks on
+
+- 14 Stop the driver using the sc command.
     Without the quotation marks and with the name of your kernel driver 
 
       sc stop "kernel driver name"
-
-
 
 - Enabling 
 

@@ -61,6 +61,9 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 - 1. Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF)
 - 2. Add a new header file named "messages.h" ( In the Header Files Folder )
 - 3. Define a function called debug_message that takes a string and some extra parameters.
+  ![Image Of Debut Message Funtion](1.png)
+  
+     
 - 4. Include the "messages.h" header file in your source file.
 - 5. Create a function called driver_entry that takes a PDRIVER_OBJECT and a PUNICODE_STRING.
 - 6. Create a function called unload_driver that takes a PDRIVER_OBJECT.

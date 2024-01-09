@@ -34,7 +34,8 @@ Before you begin, you will need to make sure you have the following:
 When we want to develop a kernel driver we first need to setup our Enviroment.
 We need to download a few requirements, which are listed down below:
 
- * Tip: Remember to install "WDK" after installing Visual Studio 2022 as WDK is an extension to VS22
+ * Tip1: Remember to install "WDK" after installing Visual Studio 2022 as WDK is an extension to VS22
+ * Tip2: Remember to Install all Individual Components when installing Visual Studio 2022
 
 Step 1: Install Visual Studio 2022	Link: https://visualstudio.microsoft.com/downloads/
 

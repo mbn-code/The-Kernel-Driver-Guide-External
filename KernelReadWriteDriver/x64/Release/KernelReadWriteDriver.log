@@ -1,0 +1,23 @@
+﻿  Building 'KernelReadWriteDriver' with toolset 'WindowsKernelModeDriver10.0' and the 'Universal' target platform.
+  Stamping x64\Release\KernelReadWriteDriver.inf
+  Stamping [Version] section with DriverVer=01/09/2024,17.6.7.546
+  KernalReadWrite.c
+  KernelReadWriteDriver.vcxproj -> C:\Users\redhat\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\redhat\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver.sys
+  
+  Driver is 'Universal'.
+  ........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\redhat\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver\kernelreadwritedriver.cat
+  Done Adding Additional Store
+  Successfully signed: C:\Users\redhat\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver\kernelreadwritedriver.cat
+  

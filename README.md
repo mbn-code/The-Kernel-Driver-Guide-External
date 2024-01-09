@@ -52,4 +52,29 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
   - MSVC v143 - VS 2022 C++ ARM64/ARM64EC Spectre-mitigated libs (Latest)
   - MSVC v143 - VS 2022 C++ x64/x86 Spectre-mitigated libs (Latest)
 
+- **Installing Debug View**
+- * Download Debug View from this direct link: https://download.sysinternals.com/files/DebugView.zip
+  * Or go here: https://learn.microsoft.com/en-us/sysinternals/downloads/debugview
+
+# Creating And Running The Driver ( Using Debug View ) 
+
+- 1. Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF)
+- 2. Add a new header file named "messages.h" ( In the Header Files Folder )
+- 3. Define a function called debug_message that takes a string and some extra parameters.
+- 4. Include the "messages.h" header file in your source file.
+- 5. Create a function called driver_entry that takes a PDRIVER_OBJECT and a PUNICODE_STRING.
+- 6. Create a function called unload_driver that takes a PDRIVER_OBJECT.
+- 7. Call the debug_message function to print a message when the driver starts and stops.
+- 8. Compile the driver.
+- 9. Load the driver using the sc command.
+- 10. Start the driver using Debug View.
+- 11. Stop the driver using the sc command.
+
+- Enabling 
+
+
+
+
+
+
 

@@ -37,7 +37,9 @@ We need to download a few requirements, which are listed down below:
  * Tip: Remember to install "WDK" after installing Visual Studio 2022 as WDK is an extension to VS22
 
 Step 1: Install Visual Studio 2022	Link: https://visualstudio.microsoft.com/downloads/
+
 Step 2: Install SDK	Link: https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/
+
 Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk
 
 - a1. Follow This Tutorial For Installing Windows Driver Kit if the tutorial above is outdated: https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk

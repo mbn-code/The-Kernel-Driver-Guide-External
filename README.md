@@ -58,20 +58,48 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 
 # Creating And Running The Driver ( Using Debug View ) 
 
-- 1. Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF)
-- 2. Add a new header file named "messages.h" ( In the Header Files Folder )
-- 3. Define a function called debug_message that takes a string and some extra parameters.
-  ![Image Of Debut Message Funtion](1.png)
+- 1 Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF).
+- 2 Add a new header file named "messages.h" ( In the Header Files Folder ).
+- 3 Define a function called debug_message that takes a string and some extra parameters.
+  ![1](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/b111f975-b64c-4655-86a2-99a4e0c8a54c)
+
+   
+- 4 Include the "messages.h" header file in your source file.
+
+  ![2](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/84ad28b7-291d-4f9e-93b4-873f4d95e5e0)
+
+- 5.1 Create a function called driver_entry that takes a PDRIVER_OBJECT and a PUNICODE_STRING.
+- 5.2 Create a function called unload_driver that takes a PDRIVER_OBJECT.
+- 5.3 Call the debug_message function to print a message when the driver starts and stops.
+  ![3](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/a4a6cdf2-47d2-48a5-8870-1c414499f0ea)
+
+- 8 Compile the driver.
+
+- 9 Set Kernal driver Bin Path using sc create command.
+  tip: Assuming you have the project on C drive, just replace the "computer name" with your actual computer name, and "KernalReadWriteDriver.sys" With the name if your .sys file. 
+
+      sc create KernelReadWriteDriver type= Kernel Binpath="C:\Users\computer name\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver.sys"
   
-     
-- 4. Include the "messages.h" header file in your source file.
-- 5. Create a function called driver_entry that takes a PDRIVER_OBJECT and a PUNICODE_STRING.
-- 6. Create a function called unload_driver that takes a PDRIVER_OBJECT.
-- 7. Call the debug_message function to print a message when the driver starts and stops.
-- 8. Compile the driver.
-- 9. Load the driver using the sc command.
-- 10. Start the driver using Debug View.
-- 11. Stop the driver using the sc command.
+- 10 Enable test signing
+  Using the cmd enable testsigning with the following command: 
+
+      bcdedit /set testsigning on
+
+- 11 Load the driver using the sc command.
+    Without the quotation marks and with the name of your kernel driver 
+
+      sc start "kernel driver name"
+  
+- 12 Enable Capture Kernel In Debug View
+  ![4](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/e00cb8ac-d070-43bd-b964-d3837a1b289e)
+
+
+- 13 Stop the driver using the sc command.
+    Without the quotation marks and with the name of your kernel driver 
+
+      sc stop "kernel driver name"
+
+
 
 - Enabling 
 

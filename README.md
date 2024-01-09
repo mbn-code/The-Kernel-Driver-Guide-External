@@ -127,11 +127,8 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 
       sc stop "kernel driver name"
 
-- Enabling 
 
-
-
-
+Congratulations on completing The-Kernel-Driver-Tutorial! You've successfully set up your development environment, disabled Secure Boot, and created a simple kernel driver for Windows.
 
 
 

@@ -59,6 +59,12 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 
 # Visual Studio 2022 Project Setup 
   - 1 Create a new kernel mode driver project in Visual Studio. ( Kernel Mode Driver, Empty (KMDF).
+
+  ![9](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/51d10f13-6859-4d0b-876c-084859c57651)
+
+
+
+
     Right click on the project
     
   ![5](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/5d1dd955-ca81-4faf-be77-d41adca4c1ec)

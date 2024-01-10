@@ -1,8 +1,6 @@
-[cheat-entries.md](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/files/13892862/cheat-entries.md)
 ![banner](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/998669c2-d062-4ce0-a671-2917e84058ca)
 
-
-# The-Kernel-Driver-Tutorial.
+# The-Kernel-Driver-GUIDE.
 
 Kernal Driver Tutorial For Getting Started With Kernel Drivers
 

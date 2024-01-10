@@ -9,9 +9,6 @@
  * Disclaimer:
  * This code is provided as-is, without any warranty or support. Use it at your own risk. The authors are not responsible for any damage or loss resulting from the use of this code.
  *
- * License:
- * This code is distributed under [insert license type here]. See the accompanying LICENSE file for more details.
- *
  * Notes:
  * - Disable ligegyldig error --- Da det er en driver will alle warnings blive treated som errors for at undgå BSOD f.eks.
  * - To build the kernel service, use the command: sc create RWDriver type= kernel binpath="<PathTilDriverBuild>\RWDriver.sys"
@@ -26,15 +23,19 @@
 #include "KernelReadWrite.h"
 #include "messages.h"
 
+#define IOCTL_READ_MEMORY CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_READ_ACCESS)
+#define IOCTL_WRITE_MEMORY CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+
+
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath) {
 	
 	UNREFERENCED_PARAMETER(pRegistryPath);
 	
-	// Assign Driverens Unload function til UnloadDriver functionen.
+	// Point pDriverObjects DriverUnload pointer til UnloadDriver
 	pDriverObject->DriverUnload = UnloadDriver;
 
 	// Log Welcome to this kernel driver
-	DebugMessage("Welcome to this Kernal Driver");
+	DebugMessage("Kernel Driver Started Successfully");
 
 	return STATUS_SUCCESS;
 }
@@ -46,5 +47,10 @@ NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject) {
 	// log Goodbyte from this driver
 	DebugMessage("Goodbyte from this driver");
 
+	PsRemoveLoadImageNotifyRoutine()
+
 	return STATUS_SUCCESS;
 }
+
+
+// TOOD : Implement IOCTL for communication between user-mode and kernel-driver

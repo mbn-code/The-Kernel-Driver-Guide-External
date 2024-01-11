@@ -46,9 +46,6 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath
 	IoCreateDevice(pDriverObject, 0, &dev, FILE_DEVICE_UNKNOWN, FILE_DEVICE_SECURE_OPEN, FALSE, &pDeviceObject);
 	IoCreateSymbolicLink(&dos, &dev);
 
-	//Set the the LoadImageNotifyRoutine to our Callback
-	PsSetLoadImageNotifyRoutine(ImageLoadCB);
-
 	pDriverObject->MajorFunction[IRP_MJ_CREATE] = CreateCall;
 	pDriverObject->MajorFunction[IRP_MJ_CLOSE] = CloseCall;
 	pDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = IoControl;

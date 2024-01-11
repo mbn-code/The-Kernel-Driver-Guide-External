@@ -1,4 +1,4 @@
-#pragma warning (disable : 4047 4024)
+#pragma warning (disable : 4047 4024 4311)
 
 #include "Events.h"
 #include "messages.h"
@@ -6,15 +6,13 @@
 
 PLOAD_IMAGE_NOTIFY_ROUTINE ImageLoadCB(PUNICODE_STRING FullImgName, HANDLE ProcId, PIMAGE_INFO ImgInfo)
 {
-	if (wcsstr(FullImgName->Buffer, L"ac_client.exe"))
+	if (wcsstr(FullImgName->Buffer, ImageBuffer))
 	{
 		DebugMessage("Image Found");
+		DebugMessage("Buffer: %ls", FullImgName->Buffer);
 
 		BaseModuleAdress = ImgInfo->ImageBase;
-
-		DebugMessage("Image Process ID: %d \n", ProcId);
-
-		DebugMessage("Base Module Adress: %d \n", BaseModuleAdress);
+		ProcessId = (ULONG)ProcId;
 	}
 
 	return STATUS_SUCCESS;

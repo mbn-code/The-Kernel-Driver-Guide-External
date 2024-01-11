@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Communications.hpp" />
     <ClInclude Include="Kernelinterface.hpp" />
+    <ClInclude Include="Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -39,6 +39,9 @@
     <ClInclude Include="Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KernelReadWrite.c">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Communication.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="memory.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

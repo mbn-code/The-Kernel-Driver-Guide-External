@@ -1,16 +1,25 @@
-#include <iostream>
+    #include <iostream>
 #include "Kernelinterface.hpp"
+#include "Util.hpp"
 
 int main()
 {
     KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");
 
-    ULONG BaseModuleAdress = Driver.GetClientAdress();
+    if (Driver.SetImageBuffer(const_cast<wchar_t*>(L"ac_client.exe")))
+    {
+        std::string S;
 
-    std::cout << "ac_client.exe Base Adress: " << BaseModuleAdress << std::endl;
+        while (true) 
+        {
 
-    // Bare lige hold vinduet åbent :>
-    while (true) {
+            std::cin >> S;
 
+            if (S == "1") {
+                ULONG BaseModuleAdress = Driver.GetClientAdress();
+
+                std::cout << "ac_client.exe Base Adress: " << BaseModuleAdress << std::endl;
+            }
+        }
     }
 }

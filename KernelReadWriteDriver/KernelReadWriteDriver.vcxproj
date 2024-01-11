@@ -111,11 +111,16 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KernalReadWrite.h" />
+    <ClInclude Include="Communication.h" />
+    <ClInclude Include="Data.h" />
+    <ClInclude Include="Events.h" />
+    <ClInclude Include="KernelReadWrite.h" />
     <ClInclude Include="messages.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KernalReadWrite.c" />
+    <ClCompile Include="Communication.c" />
+    <ClCompile Include="Events.c" />
+    <ClCompile Include="KernelReadWrite.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

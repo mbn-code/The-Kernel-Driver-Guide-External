@@ -1,8 +1,6 @@
-
 ![banner](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/998669c2-d062-4ce0-a671-2917e84058ca)
 
-
-# The-Kernel-Driver-Tutorial.
+# The-Kernel-Driver-GUIDE.
 
 Kernal Driver Tutorial For Getting Started With Kernel Drivers
 
@@ -141,5 +139,8 @@ Step 3: Install WDK	Link: https://learn.microsoft.com/en-us/windows-hardware/dri
 
 Congratulations on completing The-Kernel-Driver-Tutorial! You've successfully set up your development environment, disabled Secure Boot, and created a simple kernel driver for Windows.
 
+# Cheat Table Content for Assaulted Cube Process
+---
 
+- * Cheat Entries Can be found in this md [cheat-entries.md](cheat-entries.md) or from downloading the [assaultcube.CT](assaultcube.CT) file, and running with cheat engine whilst running the [game](https://github.com/assaultcube/AC/releases/tag/v1.3.0.2).
 

@@ -72,10 +72,5 @@ NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject) {
 	IoDeleteSymbolicLink(&dos);
 	IoDeleteDevice(pDriverObject->DeviceObject);
 
-	PsRemoveLoadImageNotifyRoutine()
-
 	return STATUS_SUCCESS;
 }
-
-
-// TOOD : Implement IOCTL for communication between user-mode and kernel-driver

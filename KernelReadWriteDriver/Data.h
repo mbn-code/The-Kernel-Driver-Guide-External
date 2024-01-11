@@ -1,4 +1,7 @@
 #pragma once
 #include <ntdef.h>
 
-ULONG AcClientAddress;
+wchar_t ImageBuffer;
+ULONG BaseModuleAdress;
+PDEVICE_OBJECT pDeviceObject;
+UNICODE_STRING dev, dos;

@@ -9,11 +9,8 @@
  * Disclaimer:
  * This code is provided as-is, without any warranty or support. Use it at your own risk. The authors are not responsible for any damage or loss resulting from the use of this code.
  *
- * License:
- * This code is distributed under [insert license type here]. See the accompanying LICENSE file for more details.
- *
  * Notes:
- * - Disable ligegyldig error --- Da det er en driver will alle warnings blive treated som errors for at undgå BSOD f.eks.
+ * - Disable ligegyldig error --- Da det er en driver will alle warnings blive treated som errors for at undgÃ¥ BSOD f.eks.
  * - To build the kernel service, use the command: sc create RWDriver type= kernel binpath="<PathTilDriverBuild>\RWDriver.sys"
  * - Ensure SecureBoot is disabled in BIOS if there are issues.
  * - To allow the driver, run: bcdedit /set testsigning on
@@ -28,6 +25,10 @@
 #include "Events.h"
 #include "Data.h"
 #include "Communication.h"
+
+#define IOCTL_READ_MEMORY CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_READ_ACCESS)
+#define IOCTL_WRITE_MEMORY CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath) {
 
@@ -71,5 +72,10 @@ NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject) {
 	IoDeleteSymbolicLink(&dos);
 	IoDeleteDevice(pDriverObject->DeviceObject);
 
+	PsRemoveLoadImageNotifyRoutine()
+
 	return STATUS_SUCCESS;
 }
+
+
+// TOOD : Implement IOCTL for communication between user-mode and kernel-driver

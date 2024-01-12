@@ -40,9 +40,11 @@ NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 
 		//RtlCopyMemory(ImageBuffer, NewImgBuffer, Size * sizeof(wchar_t));
 
+		//DebugMessage("SETUP NewImgBuffer contains this: %ls \n", NewImgBuffer);
+
 		ImageBuffer = NewImgBuffer;
 
-		PsSetLoadImageNotifyRoutine(ImageLoadCB);
+		//DebugMessage("SETUP ImageBuffer contains this: %ls \n", ImageBuffer);
 
 		CurrentStatus = STATUS_SUCCESS;
 	}
@@ -62,6 +64,8 @@ NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	{
 		PKERNEL_WRITE_REQUEST WriteInput = (PKERNEL_WRITE_REQUEST)Irp->AssociatedIrp.SystemBuffer;
 		PEPROCESS Process;
+
+		DebugMessage("Set Value to: &d", WriteInput->pBuff)
 
 		if (NT_SUCCESS(PsLookupProcessByProcessId(WriteInput->ProcessId, &Process)))
 		{

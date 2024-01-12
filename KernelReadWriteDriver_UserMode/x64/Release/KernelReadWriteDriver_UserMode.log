@@ -1,9 +1,0 @@
-﻿  KernelReadWriteDriver_UserMode.cpp
-C:\Users\redhat\Documents\GitHub\The-Kernel-Driver-Tutorial\KernelReadWriteDriver_UserMode\Kernelinterface.hpp(42,98): warning C4267: 'argument': conversion from 'size_t' to 'DWORD', possible loss of data
-  (compiling source file 'KernelReadWriteDriver_UserMode.cpp')
-  
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 113 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  KernelReadWriteDriver_UserMode.vcxproj -> C:\Users\redhat\Documents\GitHub\The-Kernel-Driver-Tutorial\x64\Release\KernelReadWriteDriver_UserMode.exe

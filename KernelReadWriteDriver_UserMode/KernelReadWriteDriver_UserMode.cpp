@@ -8,20 +8,18 @@ int main()
     std::cout << "Before WriteVirtualMemory" << std::endl;
 	Sleep(10000);
 
-    if (Driver.SetImageBuffer(const_cast<wchar_t*>(L"ac_client.exe")))
-    {
-        std::string S;
+    ULONG BaseModuleAdress = Driver.GetClientAdress();
+    ULONG ProcessId = Driver.GetProcessId();
 
-        while (true) 
-        {
+    std::cout << "ac_client.exe Base Adress: " << std::hex << BaseModuleAdress << std::endl;
+    std::cout << "ac_client.exe Process ID: " << ProcessId << std::endl;
 
-            std::cin >> S;
+    int value;
 
-            if (S == "1") {
-                ULONG BaseModuleAdress = Driver.GetClientAdress();
+    std::cout << "What should the value be?: " << std::endl;
+    std::cin >> value;
 
-                std::cout << "ac_client.exe Base Adress: " << BaseModuleAdress << std::endl;
-            }
-        }
-    }
+    uint32_t LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(ProcessId, BaseModuleAdress + 0x17E0A8, sizeof(uint32_t));
+
+    Driver.WriteVirtualMemory(ProcessId, LocalPlayerAdress + 0x140, value, sizeof(value));
 }

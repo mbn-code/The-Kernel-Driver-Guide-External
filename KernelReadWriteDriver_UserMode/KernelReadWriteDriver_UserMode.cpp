@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Kernelinterface.hpp"
 #include "Util.hpp"
+#include <SFML/Graphics.hpp>>
 
 int main()
 {

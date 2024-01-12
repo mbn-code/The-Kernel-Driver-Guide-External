@@ -144,3 +144,8 @@ Congratulations on completing The-Kernel-Driver-Tutorial! You've successfully se
 
 - * Cheat Entries Can be found in this md [cheat-entries.md](cheat-entries.md) or from downloading the [assaultcube.CT](assaultcube.CT) file, and running with cheat engine whilst running the [game](https://github.com/assaultcube/AC/releases/tag/v1.3.0.2).
 
+Honerable mention of resouces and explenation videos / good to know sources: 
+https://www.youtube.com/watch?v=6TBQ7lWYQ0g 
+https://www.youtube.com/watch?v=EaxaQYESDlM
+https://www.youtube.com/watch?v=KzD_nc5B_8w
+https://www.youtube.com/watch?v=eumG222Efzs

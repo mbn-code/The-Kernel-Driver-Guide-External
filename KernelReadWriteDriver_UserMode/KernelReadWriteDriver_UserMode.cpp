@@ -6,8 +6,6 @@
 int main()
 {
     KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");
-    std::cout << "Before WriteVirtualMemory" << std::endl;
-	Sleep(10000);
 
     ULONG BaseModuleAdress = Driver.GetClientAdress();
     ULONG ProcessId = Driver.GetProcessId();
@@ -22,5 +20,5 @@ int main()
 
     uint32_t LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(ProcessId, BaseModuleAdress + 0x17E0A8, sizeof(uint32_t));
 
-    Driver.WriteVirtualMemory(ProcessId, LocalPlayerAdress + 0x140, value, sizeof(value));
+    Driver.WriteVirtualMemory(ProcessId, LocalPlayerAdress + 0xEC, value, sizeof(value));
 }

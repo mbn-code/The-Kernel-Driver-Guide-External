@@ -5,107 +5,140 @@
 class KernelInterface
 {
 public:
-	HANDLE hDriver;
+    HANDLE hDriver;
 
-	KernelInterface(LPCSTR RegistryPath) {
-		hDriver = CreateFileA(RegistryPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-	}
+    // Constructor
+    KernelInterface(LPCSTR RegistryPath) : hDriver(INVALID_HANDLE_VALUE)
+    {
+        hDriver = CreateFileA(RegistryPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+        if (hDriver == INVALID_HANDLE_VALUE)
+        {
+            // Print the path for debugging
+            std::cerr << "Failed to open driver at path: " << RegistryPath << " with error: " << GetLastError() << std::endl;
+        }
+    }
 
-	bool SetImageBuffer(wchar_t* ImageBuffer)
-	{
-		if (hDriver == INVALID_HANDLE_VALUE)
-		{
-			return false;
-		}
 
-		DWORD Bytes;
+    // Destructor
+    ~KernelInterface()
+    {
+        if (hDriver != INVALID_HANDLE_VALUE)
+        {
+            CloseHandle(hDriver);
+        }
+    }
 
-		size_t Size = wcslen(ImageBuffer);
+    // Function to set image buffer
+    bool SetImageBuffer(const wchar_t* ImageBuffer)
+    {
+        if (hDriver == INVALID_HANDLE_VALUE)
+        {
+            return false;
+        }
 
-		if (DeviceIoControl(hDriver, IO_SET_IMAGEBUFFER, ImageBuffer, Size*sizeof(wchar_t), NULL, NULL, &Bytes, NULL))
-		{
-			return true;
-		}
+        DWORD Bytes;
+        size_t Size = wcslen(ImageBuffer);
 
-		return false;
-	}
+        if (DeviceIoControl(hDriver, IO_SET_IMAGEBUFFER, const_cast<wchar_t*>(ImageBuffer), Size * sizeof(wchar_t), nullptr, 0, &Bytes, nullptr))
+        {
+            return true;
+        }
 
-	DWORD GetClientAdress() 
-	{
-		if (hDriver == INVALID_HANDLE_VALUE) 
-		{
-			return 0;
-		}
+        // Add error handling if necessary
+        std::cerr << "SetImageBuffer failed: " << GetLastError() << std::endl;
+        return false;
+    }
 
-		ULONG ReturnAdress;
-		DWORD Bytes;
+    // Function to get client address
+    DWORD GetClientAdress()
+    {
+        if (hDriver == INVALID_HANDLE_VALUE)
+        {
+            return 0;
+        }
 
-		if (DeviceIoControl(hDriver, IO_GET_CLIENTADRESS, &ReturnAdress, sizeof(ReturnAdress), &ReturnAdress, sizeof(ReturnAdress), &Bytes, NULL)) 
-		{
-			return ReturnAdress;
-		}
+        ULONG ReturnAddress;
+        DWORD Bytes;
 
-		return 0;
-	}
+        if (DeviceIoControl(hDriver, IO_GET_CLIENTADRESS, nullptr, 0, &ReturnAddress, sizeof(ReturnAddress), &Bytes, nullptr))
+        {
+            return ReturnAddress;
+        }
 
-	DWORD GetProcessId()
-	{
-		if (hDriver == INVALID_HANDLE_VALUE)
-		{
-			return 0;
-		}
+        // Add error handling if necessary
+        std::cerr << "GetClientAdress failed: " << GetLastError() << std::endl;
+        return 0;
+    }
 
-		ULONG ProcessId;
-		DWORD Bytes;
+    // Function to get process ID
+    DWORD GetProcessId()
+    {
+        if (hDriver == INVALID_HANDLE_VALUE)
+        {
+            return 0;
+        }
 
-		if (DeviceIoControl(hDriver, IO_GET_PROCESSID, &ProcessId, sizeof(ProcessId), &ProcessId, sizeof(ProcessId), &Bytes, NULL))
-		{
-			return ProcessId;
-		}
+        ULONG ProcessId;
+        DWORD Bytes;
 
-		return 0;
-	}
+        if (DeviceIoControl(hDriver, IO_GET_PROCESSID, nullptr, 0, &ProcessId, sizeof(ProcessId), &Bytes, nullptr))
+        {
+            return ProcessId;
+        }
 
-	template <typename type>
-	type ReadVirtualMemory(ULONG ProcessId, ULONG ReadAdress, SIZE_T Size) 
-	{
-		type Buffer;
+        // Add error handling if necessary
+        std::cerr << "GetProcessId failed: " << GetLastError() << std::endl;
+        return 0;
+    }
 
-		KERNEL_READ_REQUEST ReadReq;
-		ReadReq.ProcessId = ProcessId;
-		ReadReq.Address = ReadAdress;
-		ReadReq.pBuff = &Buffer;
-		ReadReq.Size = Size;
+    // Function to read virtual memory
+    template <typename type>
+    type ReadVirtualMemory(ULONG ProcessId, ULONG ReadAddress, SIZE_T Size)
+    {
+        type Buffer = {};
 
-		if (DeviceIoControl(hDriver, IO_READ_REQUEST, &ReadReq, sizeof(ReadReq), &ReadReq, sizeof(ReadReq), NULL, NULL))
-		{
-			return Buffer;
-		}
+        KERNEL_READ_REQUEST ReadReq;
+        ReadReq.ProcessId = ProcessId;
+        ReadReq.Address = ReadAddress;
+        ReadReq.pBuff = &Buffer;
+        ReadReq.Size = Size;
 
-		return Buffer;
-	}
+        DWORD Bytes;
 
-	template <typename type>
-	bool WriteVirtualMemory(ULONG ProcessId, ULONG WriteAdress, type WriteValue, SIZE_T Size)
-	{
-		if (hDriver == INVALID_HANDLE_VALUE)
-		{
-			return false;
-		}
+        if (DeviceIoControl(hDriver, IO_READ_REQUEST, &ReadReq, sizeof(ReadReq), &ReadReq, sizeof(ReadReq), &Bytes, nullptr))
+        {
+            return Buffer;
+        }
 
-		DWORD Bytes;
+        // Add error handling if necessary
+        std::cerr << "ReadVirtualMemory failed: " << GetLastError() << std::endl;
+        return Buffer;
+    }
 
-		KERNEL_WRITE_REQUEST WriteReq;
-		WriteReq.ProcessId = ProcessId;
-		WriteReq.Address = WriteAdress;
-		WriteReq.pBuff = &WriteAdress;
-		WriteReq.Size = Size;
+    // Function to write virtual memory
+    template <typename type>
+    bool WriteVirtualMemory(ULONG ProcessId, ULONG WriteAddress, type WriteValue, SIZE_T Size)
+    {
+        if (hDriver == INVALID_HANDLE_VALUE)
+        {
+            return false;
+        }
 
-		if (DeviceIoControl(hDriver, IO_WRITE_REQUEST, &WriteReq, sizeof(WriteReq), NULL, NULL, &Bytes, NULL))
-		{
-			return true;
-		}
+        DWORD Bytes;
 
-		return false;
-	}
+        KERNEL_WRITE_REQUEST WriteReq;
+        WriteReq.ProcessId = ProcessId;
+        WriteReq.Address = WriteAddress;
+        WriteReq.pBuff = &WriteValue;
+        WriteReq.Size = Size;
+
+        if (DeviceIoControl(hDriver, IO_WRITE_REQUEST, &WriteReq, sizeof(WriteReq), nullptr, 0, &Bytes, nullptr))
+        {
+            return true;
+        }
+
+        // Add error handling if necessary
+        std::cerr << "WriteVirtualMemory failed: " << GetLastError() << std::endl;
+        return false;
+    }
 };

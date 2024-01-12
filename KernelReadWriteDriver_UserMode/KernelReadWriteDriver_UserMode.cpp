@@ -1,10 +1,12 @@
-    #include <iostream>
+#include <iostream>
 #include "Kernelinterface.hpp"
 #include "Util.hpp"
 
 int main()
 {
     KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");
+    std::cout << "Before WriteVirtualMemory" << std::endl;
+	Sleep(10000);
 
     if (Driver.SetImageBuffer(const_cast<wchar_t*>(L"ac_client.exe")))
     {

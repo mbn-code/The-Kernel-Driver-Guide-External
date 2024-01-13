@@ -15,6 +15,8 @@ Before you begin, you will need to make sure you have the following:
 
 - A Windows machine with Secure Boot Disabled
 - Windows Machine With at least 4 GB RAM
+- [Windows Redistributable](https://download.visualstudio.microsoft.com/download/pr/a061be25-c14a-489a-8c7c-bb72adfb3cab/4DFE83C91124CD542F4222FE2C396CABEAC617BB6F59BDCBDF89FD6F0DF0A32F/VC_redist.x64.exe)
+- [DirectX](https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe)
 
 # Disabling Secure Boot
 

@@ -189,6 +189,7 @@
     <ClInclude Include="imgui\TextEditor.h" />
     <ClInclude Include="Kernelinterface.hpp" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="Theme\font.h" />
     <ClInclude Include="Theme\fonts.hpp" />
     <ClInclude Include="Theme\Theme.h" />

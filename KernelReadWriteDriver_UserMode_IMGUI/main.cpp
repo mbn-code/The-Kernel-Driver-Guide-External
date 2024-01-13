@@ -11,6 +11,11 @@
 #include "Kernelinterface.hpp"
 #include "Memory.h"
 
+// Kernel  Interface //
+
+KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");;
+
+
 bool reset_size = true;
 bool mainWindow = true;
 int tabs = 1;
@@ -18,13 +23,27 @@ Theme theme;
 
 /* RW/ImGUI Variable Handle Area */
 
-bool showESPWin = false;
+bool showBoxESP = false;
+bool showNameESP = false;
+bool showHealthESP = false;
+bool showDistanceESP = false;
+
+bool enableAimbot = false;
+bool aimbotVisibleCheck = false;
+bool aimbotSmoothing = false;
+float aimbotSmoothingFactor = 0.5f;
 
 /* RW/ImGUI Variable Handle Area End */
 
 
 void ReadWriteThreadController()
 {
+	while (true) {
+
+		if (enableAimbot) { // Aimbot
+
+		}
+	}
 
 	return;
 }
@@ -40,6 +59,45 @@ enum class WindowState {
 WindowState currentWindowState = WindowState::Main; // Init currentWindowState to the MainWindow
 
 void RenderMainWindow() {
+
+	uint32_t LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(Memory::Adress::ProcessId, Memory::Adress::BaseModuleAdress + Memory::Adress::LocalPlayerAdress, sizeof(uint32_t));
+
+	int Health = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HP, sizeof(int));
+	int Armour = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Armor, sizeof(int));
+
+	float HeadX = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HeadX, sizeof(float));
+	float HeadY = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HeadY, sizeof(float));
+	float HeadZ = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HeadZ, sizeof(float));
+	float X = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::X, sizeof(float));
+	float Y = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Y, sizeof(float));
+	float Z = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Z, sizeof(float));
+	char* Name = Driver.ReadVirtualMemory<char*>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Name, sizeof(char*));
+	int Team = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Team, sizeof(int));
+
+	// Weapon Information
+	char* weaponName = Driver.ReadVirtualMemory<char*>(Memory::Adress::ProcessId, (LocalPlayerAdress + Memory::EntityOffsets::CurrentWeaponStruct) + Memory::EntityOffsets::Weapon::Name, sizeof(char*));
+	short weaponRecoil1 = Driver.ReadVirtualMemory<short>(Memory::Adress::ProcessId, Memory::EntityOffsets::CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil1, sizeof(short));
+	short weaponRecoil2 = Driver.ReadVirtualMemory<short>(Memory::Adress::ProcessId, Memory::EntityOffsets::CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil2, sizeof(short));
+
+
+
+    // Display player information
+
+
+	ImGui::Text("Local Player Address: 0x%X", LocalPlayerAdress);
+	ImGui::Text("Head Position: %.2f, %.2f, %.2f", HeadX, HeadY, HeadZ);
+	ImGui::Text("Position: %.2f, %.2f, %.2f", X, Y, Z);
+	ImGui::Text("Health: %d", Health);
+	ImGui::Text("Armor: %d", Armour);
+	ImGui::Text("Player Name: %s", Name);
+	ImGui::Text("Team: %d", Team);
+
+	// Display weapon information
+	ImGui::Text("Weapon Information");
+	ImGui::Text("Weapon Name: %s", weaponName);
+	ImGui::Text("Weapon Recoil1: %d", weaponRecoil1);
+	ImGui::Text("Weapon Recoil2: %d", weaponRecoil2);
+
 	// Set a fixed size for buttons
 	const ImVec2 buttonSize(150.0f, 100.0f);
 
@@ -78,12 +136,6 @@ void RenderMainWindow() {
 	}
 }
 
-
-bool showBoxESP = false;
-bool showNameESP = false;
-bool showHealthESP = false;
-bool showDistanceESP = false;
-
 void RenderEspMenu(){
 
 	ImGui::Text("ESP Menu");
@@ -106,11 +158,6 @@ void RenderEspMenu(){
 	}
 		
 }
-
-bool enableAimbot = false;
-bool aimbotVisibleCheck = false;
-bool aimbotSmoothing = false;
-float aimbotSmoothingFactor = 0.5f;
 
 
 void RenderAimbotMenu() {
@@ -192,6 +239,10 @@ void RenderOthersMenu() {
 
 int main()
 {
+	// Make BaseModuleAdress + ProcessId Available
+	Memory::Adress::BaseModuleAdress = Driver.GetClientAdress();
+	Memory::Adress::ProcessId = Driver.GetProcessId();
+
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 
 	std::thread RWThread(ReadWriteThreadController); // Start RW Thread to run alongisde ImGui

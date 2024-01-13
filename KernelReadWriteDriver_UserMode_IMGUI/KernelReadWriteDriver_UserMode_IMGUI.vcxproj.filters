@@ -134,6 +134,9 @@
     <ClInclude Include="Memory.h">
       <Filter>rw</Filter>
     </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>rw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

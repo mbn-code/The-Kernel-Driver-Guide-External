@@ -1,24 +1,71 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
 #include <iostream>
 #include "Kernelinterface.hpp"
 #include "Util.hpp"
-#include <SFML/Graphics.hpp>>
 
 int main()
 {
-    KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
 
-    ULONG BaseModuleAdress = Driver.GetClientAdress();
-    ULONG ProcessId = Driver.GetProcessId();
+	sf::RenderWindow window(sf::VideoMode(400, 200), "Kernel Driver User Mode", sf::Style::Close);
 
-    std::cout << "ac_client.exe Base Adress: " << std::hex << BaseModuleAdress << std::endl;
-    std::cout << "ac_client.exe Process ID: " << ProcessId << std::endl;
+	sf::RectangleShape slider(sf::Vector2f(300.f, 10.f));
+	slider.setPosition(50.f, 50.f);
+	slider.setFillColor(sf::Color::Blue);
 
-    int value;
+	sf::RectangleShape button(sf::Vector2f(100.f, 50.f));
+	button.setPosition(50.f, 100.f);
+	button.setFillColor(sf::Color::Red);
 
-    std::cout << "What should the value be?: " << std::endl;
-    std::cin >> value;
 
-    uint32_t LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(ProcessId, BaseModuleAdress + 0x17E0A8, sizeof(uint32_t));
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
 
-    Driver.WriteVirtualMemory(ProcessId, LocalPlayerAdress + 0xEC, value, sizeof(value));
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+					// Check if the button is clicked
+					if (button.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+					{
+						// Perform action when the button is clicked
+						// For example, you can update the kernel driver value
+						std::cout << "Button Clicked!\n";
+					}
+				}
+			}
+		}
+
+		// Update the valueText to show the slider value
+		int sliderValue = static_cast<int>(slider.getSize().x);
+
+		// Update the slider position based on mouse movement
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			if (slider.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+			{
+				float newSliderWidth = static_cast<float>(mousePos.x - slider.getPosition().x);
+				slider.setSize(sf::Vector2f(newSliderWidth, slider.getSize().y));
+			}
+		}
+
+		window.clear();
+
+		// Render
+		window.draw(slider);
+		window.draw(button);
+
+		window.display();
+	}
+
+	return 0;
 }

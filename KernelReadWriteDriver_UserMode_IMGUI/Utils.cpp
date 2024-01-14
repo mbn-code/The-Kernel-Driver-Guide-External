@@ -1,31 +1,49 @@
 #include "Utils.h"
+#include <sstream>
 #include <Windows.h>
 #include <map>
+
+#define MSGBOX(x) \
+{ \
+   std::ostringstream oss; \
+   oss << x; \
+   std::string str = oss.str(); \
+   std::wstring stemp = std::wstring(str.begin(), str.end()); \
+   LPCWSTR sw = stemp.c_str(); \
+   MessageBox(NULL, sw, L"Msg Title", MB_OK | MB_ICONQUESTION); \
+}
 
 
 HHOOK hHook = NULL;
 std::map<int, bool> keyStates;
 extern DWORD ProcessId;
 
+struct Params
+{
+	DWORD pid;
+	HWND hwnd;
+};
+
 HWND FindWindowByProcessId(DWORD processId)
 {
-	HWND hwnd = NULL;
+	Params params = { processId, NULL };
 
 	EnumWindows([](HWND handle, LPARAM lParam) -> BOOL {
 		DWORD processId;
 		GetWindowThreadProcessId(handle, &processId);
+		Params* params = (Params*)lParam;
 
 		// If the process ID matches, set the HWND and return FALSE to stop enumeration
-		if (processId == lParam)
+		if (processId == params->pid)
 		{
-			*((HWND*)lParam) = handle;
+			params->hwnd = handle;  // Set hwnd
 			return FALSE;
 		}
 
 		return TRUE;  // Continue enumeration
-		}, (LPARAM)&processId);
+		}, (LPARAM)&params);
 
-	return hwnd;
+	return params.hwnd;
 }
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -55,4 +73,9 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 bool IsKeyPressed(int vkCode)
 {
 	return keyStates[vkCode];
+}
+
+void SetupHook() {
+		//MSGBOX("SetupHook");
+	hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
 }

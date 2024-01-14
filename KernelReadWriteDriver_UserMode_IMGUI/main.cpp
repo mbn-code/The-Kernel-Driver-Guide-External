@@ -107,12 +107,11 @@ void ReadWriteThreadController()
 				float hyp = sqrt(Delta.x * Delta.x + Delta.y * Delta.y); // Get Hypo
 				float pitch = atan2f(Delta.z, hyp) * 180 / 3.141592653589793238463; // Get Pitch
 
-				pitch + 90; // 90 til pitch og yaw, eller¨kigger man det forkerte sted af en grund??
-				yaw + 90; 
+				pitch + 90; // 90 til pitch eller kigger man det forkerte sted af en grund??
 
 				if (IsKeyPressed(VK_LCONTROL)) {
 					// Check if aimbot key is pressed
-					Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleX, yaw, sizeof(float)); // Write Pitch
+					Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleX, yaw + 90, sizeof(float)); // Write Pitch
 					Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleY, pitch, sizeof(float)); // Write Yaw
 				}
 			}

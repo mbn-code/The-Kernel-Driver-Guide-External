@@ -15,6 +15,14 @@
 
 KernelInterface Driver = KernelInterface("\\\\.\\RWDriver");;
 
+// Static Pointers //
+
+uint32_t LocalPlayerAdress;
+
+// Static Pointers End //
+
+char nameBuffer[16]; // Buffer for Player Name
+char weaponnameBuffer[16]; // Buffer for Weapon Name
 
 bool reset_size = true;
 bool mainWindow = true;
@@ -60,8 +68,6 @@ WindowState currentWindowState = WindowState::Main; // Init currentWindowState t
 
 void RenderMainWindow() {
 
-	uint32_t LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(Memory::Adress::ProcessId, Memory::Adress::BaseModuleAdress + Memory::Adress::LocalPlayerAdress, sizeof(uint32_t));
-
 	int Health = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HP, sizeof(int));
 	int Armour = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Armor, sizeof(int));
 
@@ -71,30 +77,26 @@ void RenderMainWindow() {
 	float X = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::X, sizeof(float));
 	float Y = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Y, sizeof(float));
 	float Z = Driver.ReadVirtualMemory<float>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Z, sizeof(float));
-	char* Name = Driver.ReadVirtualMemory<char*>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Name, sizeof(char*));
+	Driver.ReadVirtualMemory<char>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Name, nameBuffer, sizeof(nameBuffer));
 	int Team = Driver.ReadVirtualMemory<int>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Team, sizeof(int));
 
 	// Weapon Information
-	char* weaponName = Driver.ReadVirtualMemory<char*>(Memory::Adress::ProcessId, (LocalPlayerAdress + Memory::EntityOffsets::CurrentWeaponStruct) + Memory::EntityOffsets::Weapon::Name, sizeof(char*));
+	Driver.ReadVirtualMemory<char>(Memory::Adress::ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Name, weaponnameBuffer, sizeof(weaponnameBuffer));
 	short weaponRecoil1 = Driver.ReadVirtualMemory<short>(Memory::Adress::ProcessId, Memory::EntityOffsets::CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil1, sizeof(short));
 	short weaponRecoil2 = Driver.ReadVirtualMemory<short>(Memory::Adress::ProcessId, Memory::EntityOffsets::CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil2, sizeof(short));
 
-
-
     // Display player information
-
-
 	ImGui::Text("Local Player Address: 0x%X", LocalPlayerAdress);
 	ImGui::Text("Head Position: %.2f, %.2f, %.2f", HeadX, HeadY, HeadZ);
 	ImGui::Text("Position: %.2f, %.2f, %.2f", X, Y, Z);
 	ImGui::Text("Health: %d", Health);
 	ImGui::Text("Armor: %d", Armour);
-	ImGui::Text("Player Name: %s", Name);
+	ImGui::Text("Player Name: %s", nameBuffer);
 	ImGui::Text("Team: %d", Team);
 
 	// Display weapon information
 	ImGui::Text("Weapon Information");
-	ImGui::Text("Weapon Name: %s", weaponName);
+	ImGui::Text("Weapon Name: %s", weaponnameBuffer);
 	ImGui::Text("Weapon Recoil1: %d", weaponRecoil1);
 	ImGui::Text("Weapon Recoil2: %d", weaponRecoil2);
 
@@ -242,6 +244,9 @@ int main()
 	// Make BaseModuleAdress + ProcessId Available
 	Memory::Adress::BaseModuleAdress = Driver.GetClientAdress();
 	Memory::Adress::ProcessId = Driver.GetProcessId();
+
+	LocalPlayerAdress = Driver.ReadVirtualMemory<uint32_t>(Memory::Adress::ProcessId, Memory::Adress::BaseModuleAdress + Memory::Adress::LocalPlayerAdress, sizeof(uint32_t));
+
 
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 

@@ -118,6 +118,19 @@ public:
         return Buffer;
     }
 
+    template<typename T>
+    void ReadVirtualMemory(DWORD ProcessId, DWORD Address, T* Buffer, SIZE_T Size)
+    {
+        KERNEL_READ_REQUEST ReadReq;
+        ReadReq.ProcessId = ProcessId;
+        ReadReq.Address = Address;
+        ReadReq.pBuff = Buffer;
+        ReadReq.Size = Size;
+
+        DeviceIoControl(hDriver, IO_READ_REQUEST, &ReadReq, sizeof(ReadReq), nullptr, 0, nullptr, nullptr);
+    }
+
+
     // Function to write virtual memory
     template <typename type>
     bool WriteVirtualMemory(ULONG ProcessId, ULONG WriteAddress, type WriteValue, SIZE_T Size)

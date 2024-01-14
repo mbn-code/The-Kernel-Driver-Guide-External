@@ -19,6 +19,9 @@ NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	if (ControlCode == IO_GET_CLIENTADRESS) 
 	{
 		PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
+
+		DebugMessage("ClientAdress: %d", BaseModuleAdress);
+
 		*OutPut = BaseModuleAdress;
 
 		ByteIO = sizeof(*OutPut);
@@ -27,6 +30,9 @@ NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	else if (ControlCode == IO_GET_PROCESSID)
 	{
 		PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
+
+		DebugMessage("ProcessId: %d", ProcessId);
+
 		*OutPut = ProcessId;
 
 		ByteIO = sizeof(*OutPut);

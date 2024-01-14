@@ -6,12 +6,11 @@
 
 PLOAD_IMAGE_NOTIFY_ROUTINE ImageLoadCB(PUNICODE_STRING FullImgName, HANDLE ProcId, PIMAGE_INFO ImgInfo)
 {
-	//("ImageBuffer contains this: %ls \n", ImageBuffer);
-
 	if (wcsstr(FullImgName->Buffer, L"ac_client.exe"))
 	{
 		//DebugMessage("Image Found");
-		//butDebugMessage("Buffer: %ls", FullImgName->Buffer);
+		DebugMessage("Process Id Found: %d", ImgInfo->ImageBase);
+		DebugMessage("BaseModuleAdress Found: %d", (ULONG)ProcId);
 
 		BaseModuleAdress = ImgInfo->ImageBase;
 		ProcessId = (ULONG)ProcId;

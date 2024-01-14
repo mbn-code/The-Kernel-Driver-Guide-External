@@ -62,3 +62,23 @@ struct Vec2 {
         return sqrt(((x * x) + (y * y)));
     }
 };
+
+struct Vec4 {
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+    float w = 0.0f;
+
+    Vec4(float x, float y, float z, float w) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+
+    Vec4() {}
+};
+
+struct ViewMat {
+    float Matrix[16]{};
+};

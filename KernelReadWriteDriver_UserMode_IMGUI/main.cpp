@@ -34,6 +34,7 @@ uint32_t LocalPlayerAdress;
 DWORD BaseModuleAdress;
 DWORD ProcessId;
 
+bool SimulateLeftClick = false;
 char nameBuffer[16]; // Buffer for Player Name
 char weaponnameBuffer[16]; // Buffer for Weapon Name
 
@@ -49,10 +50,18 @@ bool showNameESP = false;
 bool showHealthESP = false;
 bool showDistanceESP = false;
 
-bool enableAimbot = false;
+// legit aimbot variables
+bool enableLegitAimbot = false;
 bool aimbotVisibleCheck = false;
 bool aimbotSmoothing = false;
 float aimbotSmoothingFactor = 0.5f;
+
+
+// Rage aimbot variables
+// enable = nig shoot everything
+bool enableRageAimbot = false;
+
+
 
 /* RW/ImGUI Variable Handle Area End */
 
@@ -60,7 +69,7 @@ float aimbotSmoothingFactor = 0.5f;
 void ReadWriteThreadController()
 {
 	while (true) {
-		if (enableAimbot) { // Aimbot
+		if (enableLegitAimbot || enableRageAimbot) { // Aimbot <- Legit / Rage
 			uintptr_t EntityList = Driver.ReadVirtualMemory<uintptr_t>(ProcessId, BaseModuleAdress + Memory::Adress::EntityList, sizeof(uintptr_t));
 
 			if (EntityList) { // Check for null
@@ -86,13 +95,30 @@ void ReadWriteThreadController()
 
 					//MSGBOX("Local Player Head Pos: " << LocalPlayerHeadPos.x << ", " << LocalPlayerHeadPos.y << ", " << LocalPlayerHeadPos.z << "\nEntity Head Pos: " << EntityHeadPos.x << ", " << EntityHeadPos.y << ", " << EntityHeadPos.z);
 
+					if (enableLegitAimbot) { /* Legit Targetter kun on screen */
+						ViewMat ViewMatrix = Driver.ReadVirtualMemory<ViewMat>(ProcessId, BaseModuleAdress + 0x17DFD0, sizeof(ViewMat)); // Get ViewMatrix
+						Vec2 screen;  // This will hold the 2D screen position if the conversion is successful
+						WindowSize windowSize = GetWinSize(ProcessId);  // Get the window size
 
-					if ((LocalPlayerHeadPos - EntityHeadPos).hypo3() < Dist && EntityHealth > 0 && EntityTeam != LocalPlayerTeam) // Do Checks
-					{
-						TargetEntity = Entity; // Set Target
-						Dist = (LocalPlayerHeadPos - EntityHeadPos).hypo3(); // Set Distance
+						bool isOnScreen = WorldToScreen(EntityHeadPos, screen, ViewMatrix.Matrix, windowSize.width, windowSize.height);
 
-						//MSGBOX("Target Entity: 0x" << std::hex << TargetEntity << " Dist: " << Dist);
+						if ((LocalPlayerHeadPos - EntityHeadPos).hypo3() < Dist && EntityHealth > 0 && EntityTeam != LocalPlayerTeam && isOnScreen && screen.x != 0.f && screen.y != 0.f) // Do Checks
+						{
+							TargetEntity = Entity; // Set Target
+							Dist = (LocalPlayerHeadPos - EntityHeadPos).hypo3(); // Set Distance
+
+							//MSGBOX("Target Entity: 0x" << std::hex << TargetEntity << " Dist: " << Dist);
+						}
+					}
+
+					if (enableRageAimbot) { /* Rage Targetter Alt */
+						if ((LocalPlayerHeadPos - EntityHeadPos).hypo3() < Dist && EntityHealth > 0 && EntityTeam != LocalPlayerTeam) // Do Checks
+						{
+							TargetEntity = Entity; // Set Target
+							Dist = (LocalPlayerHeadPos - EntityHeadPos).hypo3(); // Set Distance
+
+							//MSGBOX("Target Entity: 0x" << std::hex << TargetEntity << " Dist: " << Dist);
+						}
 					}
 				}
 
@@ -109,12 +135,41 @@ void ReadWriteThreadController()
 
 				pitch + 90; // 90 til pitch eller kigger man det forkerte sted af en grund??
 
-				if (IsKeyPressed(VK_LCONTROL)) {
-					// Check if aimbot key is pressed
+				if (enableLegitAimbot) {
+					if (IsKeyPressed(VK_LCONTROL) && TargetEntity != LocalPlayerAdress) {
+						// Check if aimbot key is pressed
+						Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleX, yaw + 90, sizeof(float)); // Write Pitch
+						Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleY, pitch, sizeof(float)); // Write Yaw
+					}
+				}
+
+				if (enableRageAimbot) {
 					Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleX, yaw + 90, sizeof(float)); // Write Pitch
 					Driver.WriteVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::ViewAngleY, pitch, sizeof(float)); // Write Yaw
+
+					SimulateLeftClick = true;
+					//Simulate_LeftClick();
 				}
 			}
+		}
+
+		if (!enableRageAimbot) {
+			if (SimulateLeftClick) {
+				SimulateLeftClick = false;
+			}
+		}
+	}
+
+	return;
+}
+
+
+
+void ClickThread() {
+	while (true) {
+		if (SimulateLeftClick) {
+			Simulate_LeftClick();
+			Sleep(1000);
 		}
 	}
 
@@ -125,6 +180,8 @@ enum class WindowState {
 	Main,
 	EspMenu,
 	Aimbot,
+	Rage,
+	Legit,
 	Misc,
 	Others
 };
@@ -144,15 +201,6 @@ void RenderMainWindow() {
 	float Z = Driver.ReadVirtualMemory<float>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Z, sizeof(float));
 	Driver.ReadVirtualMemory<char>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Name, nameBuffer, sizeof(nameBuffer));
 	int Team = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Team, sizeof(int));
-
-	// Weapon Information
-
-	uintptr_t CurrentWeaponStruct = Driver.ReadVirtualMemory<uintptr_t>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::CurrentWeaponStruct, sizeof(uintptr_t));
-
-	Driver.ReadVirtualMemory<char>(ProcessId, CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Name, weaponnameBuffer, sizeof(weaponnameBuffer));
-	short weaponRecoil1 = Driver.ReadVirtualMemory<short>(ProcessId, CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil1, sizeof(short));
-	short weaponRecoil2 = Driver.ReadVirtualMemory<short>(ProcessId, CurrentWeaponStruct + Memory::EntityOffsets::Weapon::Recoil2, sizeof(short));
-
 	int CurrentPlayerCount = Driver.ReadVirtualMemory<int>(ProcessId, BaseModuleAdress + 0x18AC0C, sizeof(int));
 
     // Display player information
@@ -164,12 +212,6 @@ void RenderMainWindow() {
 	ImGui::Text("Armor: %d", Armour);
 	ImGui::Text("Player Name: %s", nameBuffer);
 	ImGui::Text("Team: %d", Team);
-
-	// Display weapon information
-	ImGui::Text("Weapon Information");
-	ImGui::Text("Weapon Name: %s", weaponnameBuffer);
-	ImGui::Text("Weapon Recoil1: %d", weaponRecoil1);
-	ImGui::Text("Weapon Recoil2: %d", weaponRecoil2);
 
 	// Set a fixed size for buttons
 	const ImVec2 buttonSize(150.0f, 100.0f);
@@ -232,27 +274,57 @@ void RenderEspMenu(){
 		
 }
 
+void RenderAimbotLegitMenu() {
+	// Checkbox for Enable Aimbot
+	ImGui::Checkbox2("Enable Aimbot", &enableLegitAimbot);
 
-void RenderAimbotMenu() {
-    ImGui::Text("Aimbot Menu");
+	// Checkbox for Aimbot Visibility Check
+	ImGui::Checkbox2("Aimbot Visibility Check", &aimbotVisibleCheck);
 
-    // Checkbox for Enable Aimbot
-    ImGui::Checkbox2("Enable Aimbot", &enableAimbot);
+	// Checkbox for Aimbot Smoothing
+	ImGui::Checkbox2("Aimbot Smoothing", &aimbotSmoothing);
 
-    // Checkbox for Aimbot Visibility Check
-    ImGui::Checkbox2("Aimbot Visibility Check", &aimbotVisibleCheck);
+	if (aimbotSmoothing) {
+		// Slider for Aimbot Smoothing Factor
 
-    // Checkbox for Aimbot Smoothing
-    ImGui::Checkbox2("Aimbot Smoothing", &aimbotSmoothing);
-
-    if (aimbotSmoothing) {
-        // Slider for Aimbot Smoothing Factor
-		
 		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
 		ImGui::SliderFloat("Smoothing", &aimbotSmoothingFactor, 0, 1);
 		ImGui::PopItemWidth();  // Reset item width to default
 
-    }
+	}
+
+	if (ImGui::Button("Back")) {
+		currentWindowState = WindowState::Aimbot;
+	}
+}
+
+void RenderAimbotRageMenu() {
+	// Checkbox for Enable Aimbot
+
+	if (enableLegitAimbot) {
+		ImGui::Text("Legit aimbnot already on, turn that off to use this.");
+	}
+	
+	if (ImGui::Checkbox2("Enable Aimbot", &enableRageAimbot)) {
+		enableRageAimbot = true;
+	}
+	
+}
+
+
+void RenderAimbotMainMenu() {
+    ImGui::Text("Aimbot Menu");
+
+	
+	if (ImGui::Button("Legit Aimbot")){
+		currentWindowState = WindowState::Legit; 
+	}
+
+	if (ImGui::Button("Rage Aimbot")){
+		currentWindowState = WindowState::Rage;
+	}
+	
+
 
     if (ImGui::Button("Back")) {
         currentWindowState = WindowState::Main;
@@ -323,6 +395,9 @@ int main()
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 
 	std::thread RWThread(ReadWriteThreadController); // Start RW Thread to run alongisde ImGui
+
+	std::thread ClThread(ClickThread); // Start RW Thread to run alongisde ImGui
+
 
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, 1);
@@ -444,7 +519,13 @@ int main()
 					RenderEspMenu();
 				}
 				else if (currentWindowState == WindowState::Aimbot) {
-					RenderAimbotMenu();
+					RenderAimbotMainMenu();
+				} 
+				else if (currentWindowState == WindowState::Rage){
+					RenderAimbotRageMenu();
+				} 
+				else if (currentWindowState == WindowState::Legit){
+					RenderAimbotLegitMenu();
 				}
 				else if (currentWindowState == WindowState::Misc) {
 					RenderMiscMenu();

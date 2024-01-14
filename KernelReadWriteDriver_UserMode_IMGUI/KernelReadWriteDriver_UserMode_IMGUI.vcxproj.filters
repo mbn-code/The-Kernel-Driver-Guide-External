@@ -23,6 +23,8 @@
     <ClCompile Include="imgui\TextEditor.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="global.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -137,6 +139,8 @@
     <ClInclude Include="Structs.h">
       <Filter>rw</Filter>
     </ClInclude>
+    <ClInclude Include="global.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

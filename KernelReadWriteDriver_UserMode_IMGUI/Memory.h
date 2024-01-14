@@ -5,10 +5,9 @@
 namespace Memory 
 {
 	namespace Adress {
-		ULONG BaseModuleAdress;
-		ULONG ProcessId;
 		ULONG LocalPlayerAdress = 0x17E0A8;
 		ULONG EntityList = 0x18AC04;
+		ULONG PlayerCount = 0x18AC0C;
 	}
 
 	namespace EntityOffsets { /* Alle er offsets til LocalPlayerAddress */
@@ -18,6 +17,8 @@ namespace Memory
 		ULONG X = 0x28; // float
 		ULONG Y = 0x2C; // float
 		ULONG Z = 0x30; // float
+		ULONG ViewAngleX = 0x34; // float
+		ULONG ViewAngleY = 0x38; // float
 		ULONG HP = 0xEC; // int
 		ULONG Armor = 0xF0; // int
 		ULONG Name = 0x205; // char[16]

@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="imgui\TextEditor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Communications.hpp" />
@@ -177,6 +179,7 @@
     <ClInclude Include="directx\d3dx9shape.h" />
     <ClInclude Include="directx\d3dx9tex.h" />
     <ClInclude Include="directx\d3dx9xof.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="guidev.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="Theme\font.h" />
     <ClInclude Include="Theme\fonts.hpp" />
     <ClInclude Include="Theme\Theme.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="directx\d3dx9math.inl" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Communications.hpp"
-#include "Memory.h"
+#include <iostream>
 
 class KernelInterface
 {
@@ -63,7 +63,6 @@ public:
 
         if (DeviceIoControl(hDriver, IO_GET_CLIENTADRESS, nullptr, 0, &ReturnAddress, sizeof(ReturnAddress), &Bytes, nullptr))
         {
-            Memory::Adress::BaseModuleAdress = ReturnAddress;
             return ReturnAddress;
         }
 
@@ -85,7 +84,6 @@ public:
 
         if (DeviceIoControl(hDriver, IO_GET_PROCESSID, nullptr, 0, &ProcessId, sizeof(ProcessId), &Bytes, nullptr))
         {
-            Memory::Adress::ProcessId = ProcessId;
             return ProcessId;
         }
 

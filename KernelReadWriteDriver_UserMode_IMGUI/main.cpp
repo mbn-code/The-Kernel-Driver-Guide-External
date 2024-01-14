@@ -178,17 +178,46 @@ void ClickThread() {
 
 enum class WindowState {
 	Main,
-	EspMenu,
+	INFO,
 	Aimbot,
 	Rage,
 	Legit,
-	Misc,
-	Others
+
 };
 
 WindowState currentWindowState = WindowState::Main; // Init currentWindowState to the MainWindow
 
 void RenderMainWindow() {
+
+
+
+	// Set a fixed size for buttons
+	const ImVec2 buttonSize(150.0f, 100.0f);
+
+	if (currentWindowState == WindowState::Main) {
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5, -5));
+
+		ImGui::Button("ESP Menu", buttonSize);
+		if (ImGui::IsItemClicked()) {
+			currentWindowState = WindowState::INFO;
+
+		}
+
+		ImGui::SameLine();
+
+		ImGui::Button("Aimbot", buttonSize);
+		if (ImGui::IsItemClicked()) {
+			currentWindowState = WindowState::Aimbot;
+		}
+
+		ImGui::PopStyleVar();
+	}
+}
+
+void RenderINFOMenu(){
+
+	ImGui::Text("ESP Menu");
 
 	int Health = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HP, sizeof(int));
 	int Armour = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Armor, sizeof(int));
@@ -203,7 +232,7 @@ void RenderMainWindow() {
 	int Team = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Team, sizeof(int));
 	int CurrentPlayerCount = Driver.ReadVirtualMemory<int>(ProcessId, BaseModuleAdress + 0x18AC0C, sizeof(int));
 
-    // Display player information
+	// Display player information
 	ImGui::Text("Player Count: %d", CurrentPlayerCount);
 	ImGui::Text("Local Player Address: 0x%X", LocalPlayerAdress);
 	ImGui::Text("Head Position: %.2f, %.2f, %.2f", HeadX, HeadY, HeadZ);
@@ -212,61 +241,6 @@ void RenderMainWindow() {
 	ImGui::Text("Armor: %d", Armour);
 	ImGui::Text("Player Name: %s", nameBuffer);
 	ImGui::Text("Team: %d", Team);
-
-	// Set a fixed size for buttons
-	const ImVec2 buttonSize(150.0f, 100.0f);
-
-	if (currentWindowState == WindowState::Main) {
-
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5, -5));
-
-		ImGui::Button("ESP Menu", buttonSize);
-		if (ImGui::IsItemClicked()) {
-			currentWindowState = WindowState::EspMenu;
-
-		}
-
-		ImGui::SameLine();
-
-		ImGui::Button("Aimbot", buttonSize);
-		if (ImGui::IsItemClicked()) {
-			currentWindowState = WindowState::Aimbot;
-		}
-
-		ImGui::NewLine();
-
-		ImGui::Button("Misc", buttonSize);
-		if (ImGui::IsItemClicked()) {
-			currentWindowState = WindowState::Misc;
-		}
-
-		ImGui::SameLine();
-
-		ImGui::Button("Others", buttonSize);
-		if (ImGui::IsItemClicked()) {
-			currentWindowState = WindowState::Others;
-		}
-
-		ImGui::PopStyleVar();
-	}
-}
-
-void RenderEspMenu(){
-
-	ImGui::Text("ESP Menu");
-
-	// Checkbox for Box ESP
-	ImGui::Checkbox2("Box ESP", &showBoxESP);
-
-	// Checkbox for Name ESP
-	ImGui::Checkbox2("Name ESP", &showNameESP);
-
-	// Checkbox for Health ESP
-	ImGui::Checkbox2("Health ESP", &showHealthESP);
-
-	// Checkbox for Distance ESP
-	ImGui::Checkbox2("Distance ESP", &showDistanceESP);
-
 
 	if (ImGui::Button("Back")) {
 		currentWindowState = WindowState::Main;
@@ -308,6 +282,10 @@ void RenderAimbotRageMenu() {
 	if (ImGui::Checkbox2("Enable Aimbot", &enableRageAimbot)) {
 		enableRageAimbot = true;
 	}
+
+	if (ImGui::Button("Back")) {
+		currentWindowState = WindowState::Aimbot;
+	}
 	
 }
 
@@ -329,56 +307,6 @@ void RenderAimbotMainMenu() {
     if (ImGui::Button("Back")) {
         currentWindowState = WindowState::Main;
     }
-}
-
-
-bool bunnyHop = false;
-bool noFlash = false;
-bool autoStrafe = false;
-bool thirdPerson = false;
-
-
-void RenderMiscMenu() {
-	ImGui::Text("Misc Menu");
-
-	// Checkbox for Bunny Hop
-	ImGui::Checkbox2("Bunny Hop", &bunnyHop);
-
-	// Checkbox for No Flash
-	ImGui::Checkbox2("No Flash", &noFlash);
-
-	// Checkbox for Auto Strafe
-	ImGui::Checkbox2("Auto Strafe", &autoStrafe);
-
-	// Checkbox for Third Person
-	ImGui::Checkbox2("Third Person", &thirdPerson);
-
-	if (ImGui::Button("Back")) {
-		currentWindowState = WindowState::Main;
-	}
-}
-
-
-bool showFPS = false;
-bool nightMode = false;
-bool showCoords = false;
-
-
-void RenderOthersMenu() {
-	ImGui::Text("Others Menu");
-
-	// Checkbox for Show FPS
-	ImGui::Checkbox2("Show FPS", &showFPS);
-
-	// Checkbox for Night Mode
-	ImGui::Checkbox2("Night Mode", &nightMode);
-
-	// Checkbox for Show Coordinates
-	ImGui::Checkbox2("Show Coordinates", &showCoords);
-
-	if (ImGui::Button("Back")) {
-		currentWindowState = WindowState::Main;
-	}
 }
 
 
@@ -515,23 +443,17 @@ int main()
 				if (currentWindowState == WindowState::Main) {
 					RenderMainWindow();
 				}
-				else if (currentWindowState == WindowState::EspMenu) {
-					RenderEspMenu();
+				else if (currentWindowState == WindowState::INFO) {
+					RenderINFOMenu();
 				}
 				else if (currentWindowState == WindowState::Aimbot) {
 					RenderAimbotMainMenu();
-				} 
-				else if (currentWindowState == WindowState::Rage){
+				}
+				else if (currentWindowState == WindowState::Rage) {
 					RenderAimbotRageMenu();
-				} 
-				else if (currentWindowState == WindowState::Legit){
+				}
+				else if (currentWindowState == WindowState::Legit) {
 					RenderAimbotLegitMenu();
-				}
-				else if (currentWindowState == WindowState::Misc) {
-					RenderMiscMenu();
-				}
-				else if (currentWindowState == WindowState::Others) {
-					RenderOthersMenu();
 				};
 
 				ImGui::PopStyleVar(2);

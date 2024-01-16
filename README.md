@@ -35,9 +35,19 @@ Before you begin, ensure that you have the following:
 
 To develop a kernel driver, set up your environment by downloading the following requirements:
 
-1. **Install Visual Studio 2022:** [Download Link](https://visualstudio.microsoft.com/downloads/)
-2. **Install Windows SDK:** [Download Link](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
-3. **Install Windows Driver Kit (WDK):** [Download Link](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
+1.1 **Install Visual Studio 2022:** [Download Link](https://visualstudio.microsoft.com/downloads/)
+
+1.2 - Install Desktop Development With C++
+1.3 Install Individual components listed:  
+  - C++ ATL for latest v143 build tools with Spectre Mitigations (ARM64/ARM64EC)
+  - C++ ATL for latest v143 build tools with Spectre Mitigations (x86 & x86)
+  - C++ MFC for latest v143 build tools with Spectre Mitigations (ARM64/ARM64EC)
+  - MSVC v143 - VS 2022 C++ ARM64/ARM64EC Spectre-mitigated libs (Latest)
+  - MSVC v143 - VS 2022 C++ x64/x86 Spectre-mitigated libs (Latest)
+
+
+2 **Install Windows SDK:** [Download Link](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
+3 **Install Windows Driver Kit (WDK):** [Download Link](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
 
 - Follow [this tutorial](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk) if the above WDK link is outdated.
 - When installing components for Visual Studio 2022, select "Desktop development with C++" and specific individual components as listed in the guide.

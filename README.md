@@ -6,6 +6,9 @@
 
 Hello and welcome to this comprehensive guide. Please read through carefully to avoid any mistakes. This guide is designed to provide a straightforward walkthrough for creating a simple kernel driver for Windows.
 If you would like to support this project and don't feel like compiling the binaries yourself, go to [patreon](https://www.patreon.com/icysponge/shop) to get the pre-compiled binaries.
+
+You can watch a showcase here : [WATCH](https://www.youtube.com/watch?v=uPxO-6N00NI&ab_channel=CollinEdward)
+
 ---
 
 ## Prerequisites

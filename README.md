@@ -12,7 +12,7 @@ You can watch a showcase here : [WATCH](https://www.youtube.com/watch?v=uPxO-6N0
 ---
 
 ## Prerequisites
-
+> [!IMPORTANT]
 Before you begin, ensure that you have the following:
 
 - A Windows machine with Secure Boot disabled
@@ -21,18 +21,21 @@ Before you begin, ensure that you have the following:
 - [DirectX]([https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe](https://www.microsoft.com/en-us/download/details.aspx?id=6812))
 
 ### Disabling Secure Boot
-
 1. **Restart your computer:** Access the BIOS/UEFI settings by pressing F2, F10, or Delete (based on your computer's manufacturer).
 2. **Locate Secure Boot:** Find the Secure Boot setting in the "Security" or "Trusted Platform Module (TPM)" section.
 3. **Disable Secure Boot:** Save the settings and boot into Windows.
 
-#### Additional Tips for Disabling Secure Boot:
+## Additional Tips for Disabling Secure Boot
+> [!TIP]
+Back up your data before disabling Secure Boot.
 
-- Back up your data before disabling Secure Boot.
-- Disable Secure Boot only when necessary, such as running virtual machines or specific software.
-- Re-enable Secure Boot to protect your computer once done with the required tasks.
+> [!IMPORTANT]
+> Disable Secure Boot only when necessary, such as running virtual machines or specific software.
 
----
+> [!CAUTION]
+>  Re-enable Secure Boot to protect your computer once done with the required tasks.
+
+
 
 ## Download and Setup
 
@@ -89,12 +92,12 @@ To develop a kernel driver, set up your environment by downloading the following
 1. **Set Kernel driver Bin Path:** Use `sc create` command.
    - Replace "computer name" with your actual computer name and "KernelReadWriteDriver.sys" with your .sys file name.
 
-   ```bash
+   ```
    sc create KernelReadWriteDriver type= Kernel Binpath="C:\Users\computer name\source\repos\KernelReadWriteDriver\x64\Release\KernelReadWriteDriver.sys"
    ```
 
 2. **Enable test signing:** Use the command:
-   ```bash
+   ```
    bcdedit /set testsigning on
    ```
 
@@ -102,18 +105,21 @@ To develop a kernel driver, set up your environment by downloading the following
 4. **Enable Capture Kernel In Debug View.**
 
 5. **Load the driver using the sc command:**
-   ```bash
+   ```
    sc start "kernel driver name"
    ```
 
-6. **If you encounter an error:**
-   - Run the following command in ADMIN cmd and restart:
-     ```bash
+> [!TIP]
+> When and if encountering an error do the following:
+
+5.1
+    Run the following command in ADMIN cmd and restart:
+     ```
      bcdedit /set nointegritychecks on
      ```
 
-7. **Stop the driver using the sc command:**
-   ```bash
+6. **Stop the driver using the sc command:**
+   ```
    sc stop "kernel driver name"
    ```
 

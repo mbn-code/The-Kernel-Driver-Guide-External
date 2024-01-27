@@ -198,7 +198,7 @@ void RenderMainWindow() {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5, -5));
 
-		ImGui::Button("ESP Menu", buttonSize);
+		ImGui::Button("INFO Menu", buttonSize);
 		if (ImGui::IsItemClicked()) {
 			currentWindowState = WindowState::INFO;
 
@@ -217,7 +217,7 @@ void RenderMainWindow() {
 
 void RenderINFOMenu(){
 
-	ImGui::Text("ESP Menu");
+	ImGui::Text("INFO Menu");
 
 	int Health = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::HP, sizeof(int));
 	int Armour = Driver.ReadVirtualMemory<int>(ProcessId, LocalPlayerAdress + Memory::EntityOffsets::Armor, sizeof(int));

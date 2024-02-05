@@ -2,16 +2,33 @@
 
 ![banner](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/998669c2-d062-4ce0-a671-2917e84058ca)
 
-## Welcome to The Kernel Driver Guide!
+## Welcome to The Kernel Driver Guide
 
 Hello and welcome to this comprehensive guide. Please read through carefully to avoid any mistakes. This guide is designed to provide a straightforward walkthrough for creating a simple kernel driver for Windows.
 If you would like to support this project and don't feel like compiling the binaries yourself, go to [patreon](https://www.patreon.com/icysponge/shop) to get the pre-compiled binaries.
 
-You can watch a showcase here : [WATCH](https://www.youtube.com/watch?v=uPxO-6N00NI&ab_channel=CollinEdward)
+### Showcase Video
+
+You can watch a showcase video [here](https://www.youtube.com/watch?v=uPxO-6N00NI&ab_channel=CollinEdward).
+
+## Sequence of running the application in the right order
+
+The process of running the applications in the correct order involves the following steps:
+
+1. Start the Driver
+2. Run the Game
+3. Start the User Mode Application
+
+The flowchart below illustrates this process:
+
+![Flowchart](flow-chart.png)
+
+Each step is represented by a box, and the arrows represent the flow from one step to the next. The boxes filled with light green color indicate that the corresponding application is running.
 
 ---
 
 ## Prerequisites
+
 > [!IMPORTANT]
 Before you begin, ensure that you have the following:
 
@@ -21,11 +38,13 @@ Before you begin, ensure that you have the following:
 - [DirectX]([https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe](https://www.microsoft.com/en-us/download/details.aspx?id=6812))
 
 ### Disabling Secure Boot
+
 1. **Restart your computer:** Access the BIOS/UEFI settings by pressing F2, F10, or Delete (based on your computer's manufacturer).
 2. **Locate Secure Boot:** Find the Secure Boot setting in the "Security" or "Trusted Platform Module (TPM)" section.
 3. **Disable Secure Boot:** Save the settings and boot into Windows.
 
 ## Additional Tips for Disabling Secure Boot
+
 > [!TIP]
 Back up your data before disabling Secure Boot.
 
@@ -122,6 +141,9 @@ To develop a kernel driver, set up your environment by downloading the following
    ```
    sc stop "kernel driver name"
    ```
+
+## Sequence of running the application in the right order
+
 
 ---
 

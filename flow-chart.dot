@@ -1,0 +1,20 @@
+digraph G {
+    rankdir=LR;
+    node [shape=box, style=filled, color="lightblue"];
+    edge [color="black"];
+    labelloc="t";
+    label="Process Flow";
+
+    StartDriver [label="Start the Driver"];
+    DriverRunning [label="Driver is Running", color="lightgreen"];
+    RunGame [label="Run the Game"];
+    GameRunning [label="Game is Running", color="lightgreen"];
+    StartUserModeApp [label="Start the User Mode Application"];
+    UserModeAppRunning [label="User Mode Application is Running", color="lightgreen"];
+
+    StartDriver -> DriverRunning;
+    DriverRunning -> RunGame;
+    RunGame -> GameRunning;
+    GameRunning -> StartUserModeApp;
+    StartUserModeApp -> UserModeAppRunning;
+}

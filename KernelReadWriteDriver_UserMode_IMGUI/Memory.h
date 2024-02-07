@@ -10,7 +10,7 @@ namespace Memory
 		ULONG PlayerCount = 0x18AC0C;
 	}
 
-	namespace EntityOffsets { /* Alle er offsets til LocalPlayerAddress */
+	namespace EntityOffsets { /* Alle er offsets til en Entity */
 		ULONG HeadX = 0x04; // float
 		ULONG HeadY = 0x08; // float
 		ULONG HeadZ = 0x0C; // float

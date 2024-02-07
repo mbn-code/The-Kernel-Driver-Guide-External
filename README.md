@@ -2,6 +2,9 @@
 
 ![banner](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/998669c2-d062-4ce0-a671-2917e84058ca)
 
+![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
+![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+
 # What this project is
 
 This project is a comprehensive tool designed for interacting with a game at a low level, primarily intended for creating cheats or mods. It consists of a kernel driver located in the "KernelReadWriteDriver" directory and a user mode application with a graphical user interface, located in the "KernelReadWriteDriver_UserMode_IMGUI" directory.

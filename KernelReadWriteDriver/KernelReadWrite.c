@@ -58,17 +58,29 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath
 	return STATUS_SUCCESS;
 }
 
+/**
+ * @brief Unloads the driver and performs necessary cleanup operations.
+ *
+ * This function is called when the driver is being unloaded. It removes the LoadImageNotifyRoutine
+ * callback, deletes the symbolic link, and deletes the device object.
+ *
+ * @param pDriverObject Pointer to the DRIVER_OBJECT structure representing the driver.
+ * @return NTSTATUS Returns STATUS_SUCCESS if the driver is unloaded successfully.
+ */
 NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject) {
 	
 	UNREFERENCED_PARAMETER(pDriverObject);
 	
-	// log Goodbyte from this driver
+	// log Goodbye from this driver
 	DebugMessage("Goodbye from this driver");
 
-	//Remove the the LoadImageNotifyRoutine to our Callback
+	// Remove the LoadImageNotifyRoutine to our Callback
 	PsRemoveLoadImageNotifyRoutine(ImageLoadCB);
 
+	// Delete the symbolic link
 	IoDeleteSymbolicLink(&dos);
+
+	// Delete the device object
 	IoDeleteDevice(pDriverObject->DeviceObject);
 
 	return STATUS_SUCCESS;

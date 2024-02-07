@@ -1,3 +1,44 @@
+/**
+ * @brief Håndterer IOCTL-forespørgsler, der sendes til enhedsdriveren.
+ *
+ * Denne funktion er ansvarlig for at håndtere forskellige IOCTL-forespørgsler, der sendes til enhedsdriveren.
+ * Den udfører forskellige operationer baseret på kontrolkoden angivet i IOCTL-forespørgslen.
+ *
+ * @param DeviceObject Pegeren til enhedsobjektet.
+ * @param Irp Pegeren til IRP (I/O Request Packet), der repræsenterer IOCTL-forespørgslen.
+ * @return NTSTATUS Statussen for håndtering af IOCTL-forespørgslen.
+ */
+NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+	// Implementering af funktionen
+}
+
+/**
+ * @brief Håndterer lukkeopkaldsforespørgslen, der sendes til enhedsdriveren.
+ *
+ * Denne funktion er ansvarlig for at håndtere lukkeopkaldsforespørgslen, der sendes til enhedsdriveren.
+ * Den sætter statussen for IRP til succes og fuldfører forespørgslen.
+ *
+ * @param DeviceObject Pegeren til enhedsobjektet.
+ * @param Irp Pegeren til IRP (I/O Request Packet), der repræsenterer lukkeopkaldsforespørgslen.
+ * @return NTSTATUS Statussen for håndtering af lukkeopkaldsforespørgslen.
+ */
+NTSTATUS CloseCall(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+	// Implementering af funktionen
+}
+
+/**
+ * @brief Håndterer oprettelsesopkaldsforespørgslen, der sendes til enhedsdriveren.
+ *
+ * Denne funktion er ansvarlig for at håndtere oprettelsesopkaldsforespørgslen, der sendes til enhedsdriveren.
+ * Den sætter statussen for IRP til succes og fuldfører forespørgslen.
+ *
+ * @param DeviceObject Pegeren til enhedsobjektet.
+ * @param Irp Pegeren til IRP (I/O Request Packet), der repræsenterer oprettelsesopkaldsforespørgslen.
+ * @return NTSTATUS Statussen for håndtering af oprettelsesopkaldsforespørgslen.
+ */
+
 #pragma warning (disable : 4100 4047 4024 4022)
 
 #include "Communication.h"
@@ -6,116 +47,159 @@
 #include "Events.h"
 #include "memory.h"
 
+// Definerer funktionen IoControl, der håndterer IO-kontrol kald.
 NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
-	UNREFERENCED_PARAMETER(DeviceObject);
-	NTSTATUS CurrentStatus = STATUS_UNSUCCESSFUL;
-	ULONG ByteIO = 0;
+    // Ignorerer uanvendte parametre.
+    UNREFERENCED_PARAMETER(DeviceObject);
 
-	PIO_STACK_LOCATION Stack = IoGetCurrentIrpStackLocation(Irp);
+    // Initialiserer variabler.
+    NTSTATUS CurrentStatus = STATUS_UNSUCCESSFUL;
+    ULONG ByteIO = 0;
 
-	ULONG ControlCode = Stack->Parameters.DeviceIoControl.IoControlCode;
+    // Henter information om IRP-stakken.
+    PIO_STACK_LOCATION Stack = IoGetCurrentIrpStackLocation(Irp);
 
-	if (ControlCode == IO_GET_CLIENTADRESS) 
-	{
-		PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
+    // Henter kontrolkoden for IO-kontrol.
+    ULONG ControlCode = Stack->Parameters.DeviceIoControl.IoControlCode;
 
-		DebugMessage("ClientAdress: %d", BaseModuleAdress);
+    // Håndterer forskellige kontrolkoder.
+    if (ControlCode == IO_GET_CLIENTADRESS) 
+    {
+        // Henter output-bufferen.
+        PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
 
-		*OutPut = BaseModuleAdress;
+        // Skriver besked til debugging.
+        DebugMessage("ClientAdress: %d", BaseModuleAdress);
 
-		ByteIO = sizeof(*OutPut);
-		CurrentStatus = STATUS_SUCCESS;
-	}
-	else if (ControlCode == IO_GET_PROCESSID)
-	{
-		PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
+        // Gemmer adressen i output-bufferen.
+        *OutPut = BaseModuleAdress;
 
-		DebugMessage("ProcessId: %d", ProcessId);
+        // Opdaterer antallet af bytes læst/skrevet.
+        ByteIO = sizeof(*OutPut);
 
-		*OutPut = ProcessId;
+        // Opdaterer statussen til succes.
+        CurrentStatus = STATUS_SUCCESS;
+    }
+    else if (ControlCode == IO_GET_PROCESSID)
+    {
+        // Henter output-bufferen.
+        PULONG OutPut = (PULONG)Irp->AssociatedIrp.SystemBuffer;
 
-		ByteIO = sizeof(*OutPut);
-		CurrentStatus = STATUS_SUCCESS;
-	}
-	else if (ControlCode == IO_SET_IMAGEBUFFER) 
-	{
-		wchar_t *NewImgBuffer = (wchar_t*)Irp->AssociatedIrp.SystemBuffer;
+        // Skriver besked til debugging.
+        DebugMessage("ProcessId: %d", ProcessId);
 
-		//size_t Size = wcslen(ImageBuffer);
+        // Gemmer process-id i output-bufferen.
+        *OutPut = ProcessId;
 
-		//RtlCopyMemory(ImageBuffer, NewImgBuffer, Size * sizeof(wchar_t));
+        // Opdaterer antallet af bytes læst/skrevet.
+        ByteIO = sizeof(*OutPut);
 
-		//DebugMessage("SETUP NewImgBuffer contains this: %ls \n", NewImgBuffer);
+        // Opdaterer statussen til succes.
+        CurrentStatus = STATUS_SUCCESS;
+    }
+    else if (ControlCode == IO_SET_IMAGEBUFFER) 
+    {
+        // Henter den nye billedbuffer.
+        wchar_t *NewImgBuffer = (wchar_t*)Irp->AssociatedIrp.SystemBuffer;
 
-		ImageBuffer = NewImgBuffer;
+        // Opdaterer billedbufferen.
+        ImageBuffer = NewImgBuffer;
 
-		//DebugMessage("SETUP ImageBuffer contains this: %ls \n", ImageBuffer);
+        // Opdaterer statussen til succes.
+        CurrentStatus = STATUS_SUCCESS;
+    }
+    else if (ControlCode == IO_READ_REQUEST)
+    {
+        // Henter input-data til læseanmodningen.
+        PKERNEL_READ_REQUEST ReadInput = (PKERNEL_READ_REQUEST)Irp->AssociatedIrp.SystemBuffer;
+        PEPROCESS Process;
 
-		CurrentStatus = STATUS_SUCCESS;
-	}
-	else if (ControlCode == IO_READ_REQUEST)
-	{
-		PKERNEL_READ_REQUEST ReadInput = (PKERNEL_READ_REQUEST)Irp->AssociatedIrp.SystemBuffer;
-		PEPROCESS Process;
+        // Slår processen op baseret på dens id.
+        if (NT_SUCCESS(PsLookupProcessByProcessId(ReadInput->ProcessId, &Process)))
+        {
+            // Læser virtuel hukommelse fra processen.
+            KernelReadVirtualMemory(Process, ReadInput->Address, ReadInput->pBuff, ReadInput->Size);
 
-		if (NT_SUCCESS(PsLookupProcessByProcessId(ReadInput->ProcessId, &Process)))
-		{
-			KernelReadVirtualMemory(Process, ReadInput->Address, ReadInput->pBuff, ReadInput->Size);
-			CurrentStatus = STATUS_SUCCESS;
-			ByteIO = sizeof(KERNEL_READ_REQUEST);
-		}
-	}
-	else if (ControlCode == IO_WRITE_REQUEST)
-	{
-		PKERNEL_WRITE_REQUEST WriteInput = (PKERNEL_WRITE_REQUEST)Irp->AssociatedIrp.SystemBuffer;
-		PEPROCESS Process;
+            // Opdaterer statussen til succes.
+            CurrentStatus = STATUS_SUCCESS;
 
-		if (NT_SUCCESS(PsLookupProcessByProcessId(WriteInput->ProcessId, &Process)))
-		{
-			KernelWriteVirtualMemory(Process, WriteInput->pBuff, WriteInput->Address, WriteInput->Size);
-			CurrentStatus = STATUS_SUCCESS;
-			ByteIO = sizeof(KERNEL_READ_REQUEST);
-		}
-	}
-	else 
-	{
-		ByteIO = 0;
-	}
+            // Opdaterer antallet af bytes læst/skrevet.
+            ByteIO = sizeof(KERNEL_READ_REQUEST);
+        }
+    }
+    else if (ControlCode == IO_WRITE_REQUEST)
+    {
+        // Henter input-data til skriveanmodningen.
+        PKERNEL_WRITE_REQUEST WriteInput = (PKERNEL_WRITE_REQUEST)Irp->AssociatedIrp.SystemBuffer;
+        PEPROCESS Process;
 
-	Irp->IoStatus.Status = CurrentStatus;
-	Irp->IoStatus.Information = ByteIO;
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+        // Slår processen op baseret på dens id.
+        if (NT_SUCCESS(PsLookupProcessByProcessId(WriteInput->ProcessId, &Process)))
+        {
+            // Skriver til virtuel hukommelse i processen.
+            KernelWriteVirtualMemory(Process, WriteInput->pBuff, WriteInput->Address, WriteInput->Size);
 
-	return CurrentStatus;
+            // Opdaterer statussen til succes.
+            CurrentStatus = STATUS_SUCCESS;
+
+            // Opdaterer antallet af bytes læst/skrevet.
+            ByteIO = sizeof(KERNEL_READ_REQUEST);
+        }
+    }
+    else 
+    {
+        // Hvis kontrolkoden ikke genkendes, sættes ByteIO til 0.
+        ByteIO = 0;
+    }
+
+    // Opdaterer status og antal bytes for IRP'en.
+    Irp->IoStatus.Status = CurrentStatus;
+    Irp->IoStatus.Information = ByteIO;
+
+    // Fuldfører IRP'en og frigiver ressourcer.
+    IoCompleteRequest(Irp, IO_NO_INCREMENT);
+
+    // Returnerer statussen for operationen.
+    return CurrentStatus;
 }
 
-
+// Definerer funktionen CloseCall, der kaldes når en forbindelse lukkes.
 NTSTATUS CloseCall(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
-	UNREFERENCED_PARAMETER(DeviceObject);
-	// Set Status to Success
-	Irp->IoStatus.Status = STATUS_SUCCESS;
-	Irp->IoStatus.Information = 0;
+    // Ignorerer uanvendte parametre.
+    UNREFERENCED_PARAMETER(DeviceObject);
 
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+    // Sætter statussen til succes.
+    Irp->IoStatus.Status = STATUS_SUCCESS;
+    Irp->IoStatus.Information = 0;
 
-	DebugMessage("Connection Terminated\n");
+    // Fuldfører IRP'en og frigiver ressourcer.
+    IoCompleteRequest(Irp, IO_NO_INCREMENT);
 
-	return STATUS_SUCCESS;
+    // Skriver besked til debugging.
+    DebugMessage("Forbindelse afsluttet\n");
+
+    // Returnerer statussen for operationen.
+    return STATUS_SUCCESS;
 }
 
-
+// Definerer funktionen CreateCall, der kaldes når en forbindelse oprettes.
 NTSTATUS CreateCall(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
-	UNREFERENCED_PARAMETER(DeviceObject);
-	// Set Status to Success
-	Irp->IoStatus.Status = STATUS_SUCCESS;
-	Irp->IoStatus.Information = 0;
+    // Ignorerer uanvendte parametre.
+    UNREFERENCED_PARAMETER(DeviceObject);
 
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+    // Sætter statussen til succes.
+    Irp->IoStatus.Status = STATUS_SUCCESS;
+    Irp->IoStatus.Information = 0;
 
-	DebugMessage("Connection Established\n");
+    // Fuldfører IRP'en og frigiver ressourcer.
+    IoCompleteRequest(Irp, IO_NO_INCREMENT);
 
-	return STATUS_SUCCESS;
+    // Skriver besked til debugging.
+    DebugMessage("Forbindelse etableret\n");
+
+    // Returnerer statussen for operationen.
+    return STATUS_SUCCESS;
 }

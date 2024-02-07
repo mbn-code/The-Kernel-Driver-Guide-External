@@ -2,6 +2,14 @@
 
 ![banner](https://github.com/CollinEdward/The-Kernel-Driver-Tutorial/assets/66748817/998669c2-d062-4ce0-a671-2917e84058ca)
 
+# What this project is
+
+This project is a comprehensive tool designed for interacting with a game at a low level, primarily intended for creating cheats or mods. It consists of a kernel driver located in the "KernelReadWriteDriver" directory and a user mode application with a graphical user interface, located in the "KernelReadWriteDriver_UserMode_IMGUI" directory.
+
+The kernel driver provides essential functionality for reading from and writing to virtual memory, enabling users to manipulate various aspects of the game's state. Meanwhile, the user mode application utilizes this functionality to implement a range of features, including an aimbot, while also offering a user-friendly interface for configuring these features.
+
+To maintain organization and ease of use, the project is neatly structured with separate directories for the kernel driver and the user mode application. Additionally, it comes with several supplementary resources, such as a font file named "arial.ttf", a Cheat Engine table named "assaultcube.CT", and a PowerShell script for automated installation labeled "autoinstall.ps1".
+
 ## Welcome to The Kernel Driver Guide
 
 Hello and welcome to this comprehensive guide. Please read through carefully to avoid any mistakes. This guide is designed to provide a straightforward walkthrough for creating a simple kernel driver for Windows.

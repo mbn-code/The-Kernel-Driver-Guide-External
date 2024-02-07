@@ -188,9 +188,6 @@ enum class WindowState {
 WindowState currentWindowState = WindowState::Main; // Init currentWindowState to the MainWindow
 
 void RenderMainWindow() {
-
-
-
 	// Set a fixed size for buttons
 	const ImVec2 buttonSize(150.0f, 100.0f);
 

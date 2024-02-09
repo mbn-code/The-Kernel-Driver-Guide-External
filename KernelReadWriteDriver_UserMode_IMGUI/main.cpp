@@ -58,10 +58,8 @@ float aimbotSmoothingFactor = 0.5f;
 
 
 // Rage aimbot variables
-// enable = nig shoot everything
+// enable = nick shoot everything
 bool enableRageAimbot = false;
-
-
 
 /* RW/ImGUI Variable Handle Area End */
 

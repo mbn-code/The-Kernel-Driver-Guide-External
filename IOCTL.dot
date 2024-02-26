@@ -1,0 +1,12 @@
+digraph IOCTL {
+    rankdir=LR;
+    node [shape=box, style=filled, color=lightblue];
+    edge [color=blue];
+    
+    "User Application" -> "CreateFile" [label="Open Device"];
+    "CreateFile" -> "Device Handle" [label="Returns Handle"];
+    "User Application" -> "DeviceIoControl" [label="Submit IOCTL Request"];
+    "DeviceIoControl" -> "Device Driver" [label="Passes IOCTL Request"];
+    "Device Driver" -> "DeviceIoControl" [label="Handles Request, Returns Result"];
+    "DeviceIoControl" -> "User Application" [label="Returns Result"];
+}
